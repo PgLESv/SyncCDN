@@ -1,5 +1,3 @@
----
-
 # SyncCDN 🚀
 
 **SyncCDN** is a lightweight, open-source utility designed to synchronize content across multiple CDN endpoints efficiently. It automates the process of hashing and updating files, ensuring your CDN is always up-to-date with the latest changes.
@@ -29,6 +27,5 @@ This project is licensed under the GPL-3.0 License.
 ## Contributing 🤝
 Contributions are welcome! Please fork this repository and submit a pull request.
 
----
 
 Feel free to customize this template further based on your specific needs!
