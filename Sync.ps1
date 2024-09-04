@@ -39,7 +39,9 @@ function Get-RemoteHashes ($url) {
 
 # Load remote hashes
 try {
+    Write-Host "Loading remote hashes from $hashFileUrl"
     $remoteHashes = Get-RemoteHashes $hashFileUrl
+    Write-Host "Remote hashes loaded successfully"
 } catch {
     Write-Host "Failed to retrieve remote hashes: $_"
     exit 1
@@ -58,7 +60,9 @@ function Get-LocalHashes ($directory) {
 
 # Load local hashes
 try {
+    Write-Host "Calculating local hashes for files in $localPath"
     $localHashes = Get-LocalHashes $localPath
+    Write-Host "Local hashes calculated successfully"
 } catch {
     Write-Host "Error calculating local hashes: $_"
     exit 1
@@ -69,9 +73,15 @@ foreach ($remoteFile in $remoteHashes.PSObject.Properties.Name) {
     $remoteHash = $remoteHashes.$remoteFile
     $localFile = Join-Path $localPath $remoteFile.Replace('/', '\')
 
-    if (-not (Test-Path $localFile) -or (Get-FileHash $localFile) -ne $remoteHash) {
+    if (-not (Test-Path $localFile) -or $localHashes[$remoteFile] -ne $remoteHash) {
         $remoteFileUrl = "$cdnUrl/$remoteFile"
         $localDir = Split-Path $localFile -Parent
+
+        # Validate URL
+        if (-not [System.Uri]::IsWellFormedUriString($remoteFileUrl, [System.UriKind]::Absolute)) {
+            Write-Host "Invalid URL: $remoteFileUrl"
+            continue
+        }
 
         # Create directory if not exists
         if (-not (Test-Path $localDir)) {
