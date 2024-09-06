@@ -74,7 +74,8 @@ foreach ($remoteFile in $remoteHashes.PSObject.Properties.Name) {
     $localFile = Join-Path $localPath $remoteFile.Replace('/', '\')
 
     if (-not (Test-Path $localFile) -or $localHashes[$remoteFile] -ne $remoteHash) {
-        $remoteFileUrl = "$cdnUrl/$remoteFile"
+        # Encode spaces as %20 for the URL
+        $remoteFileUrl = "$cdnUrl/$remoteFile" -replace ' ', '%20'
         $localDir = Split-Path $localFile -Parent
 
         # Validate URL
